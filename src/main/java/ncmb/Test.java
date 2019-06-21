@@ -1,4 +1,6 @@
 package ncmb;
+import org.json.JSONObject;
+import org.json.JSONArray;
 import org.json.JSONException;
 
 public class Test {
@@ -9,8 +11,22 @@ public class Test {
      try {
        NCMBObject hello = ncmb.NCMBObject("Hello");
        hello.put("message", "Hello World");
+       JSONArray array = new JSONArray();
+       array.put("apple");
+       array.put("orange");
+       array.put("banana");
+       hello.put("array", array);
+       hello.put("boolean", false);
+       hello.put("int", 1000);
+       hello.put("long", 1234567890123456789L);
+       JSONObject json = new JSONObject();
+       json.put("obj", "Hello");
+       json.put("name", "json");
+       hello.put("json", json);
        hello.save();
        System.out.println(hello.getString("objectId"));
+     } catch (JSONException e) {
+       System.err.println(e.getMessage());
      } catch (NCMBException e) {
        System.err.println(e.getMessage());
      }

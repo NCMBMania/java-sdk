@@ -1,6 +1,7 @@
 package ncmb;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.json.JSONException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ class NCMBObject {
     fields = new JSONObject();
   }
   
+  // 文字列
   public void put(String field, String value) throws NCMBException {
     try {
       fields.put(field, value);
@@ -28,7 +30,53 @@ class NCMBObject {
     }
   }
   
+  // 日付型
   public void put(String field, Date value) throws NCMBException {
+    try {
+      fields.put(field, value);
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
+  }
+  
+  // boolean型
+  public void put(String field, Boolean value) throws NCMBException {
+    try {
+      fields.put(field, value);
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
+  }
+  
+  // int型
+  public void put(String field, int value) throws NCMBException {
+    try {
+      fields.put(field, value);
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
+  }
+  
+  // Long型
+  public void put(String field, long value) throws NCMBException {
+    try {
+      fields.put(field, value);
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
+  }
+
+  // 配列型
+  public void put(String field, JSONArray value) throws NCMBException {
+    try {
+      fields.put(field, value);
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
+  }
+
+  // オブジェクト型
+  public void put(String field, JSONObject value) throws NCMBException {
     try {
       fields.put(field, value);
     } catch (JSONException e) {

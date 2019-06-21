@@ -20,19 +20,19 @@ class NCMBObject {
     fields = new JSONObject();
   }
   
-  public void put(String field, String value) throws JSONException {
+  public void put(String field, String value) throws NCMBException {
     try {
       fields.put(field, value);
     } catch (JSONException e) {
-      throw e;
+      throw new NCMBException("JSONが不正です");
     }
   }
   
-  public void put(String field, Date value) throws JSONException {
+  public void put(String field, Date value) throws NCMBException {
     try {
       fields.put(field, value);
     } catch (JSONException e) {
-      throw e;
+      throw new NCMBException("JSONが不正です");
     }
   }
   

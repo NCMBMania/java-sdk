@@ -11,8 +11,6 @@ public class Test {
        hello.put("message", "Hello World");
        hello.save();
        System.out.println(hello.getString("objectId"));
-     } catch (JSONException e) {
-       System.err.println(e.getMessage());
      } catch (NCMBException e) {
        System.err.println(e.getMessage());
      }

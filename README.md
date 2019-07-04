@@ -27,6 +27,20 @@ try {
 }
 ```
 
+### 1件取得
+
+```java
+try {
+  NCMBObject Hello = ncmb.NCMBObject("Hello");
+  Hello.setObjectId("hZq3u8EeqULE4CBN");
+  if (Hello.fetch()) {
+    System.err.println(Hello.getString("message"));
+  }
+} catch (NCMBException e) {
+  System.err.println(e.getMessage());
+}
+```
+
 ## LICENSE
 
 MIT.

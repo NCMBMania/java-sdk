@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.SimpleTimeZone;
 import java.util.Date;
 import java.text.ParseException;
-
+import java.util.Iterator;
 
 class NCMBObject {
   private String className;
@@ -19,6 +19,29 @@ class NCMBObject {
     className = name;
     ncmb = ncmb_obj;
     fields = new JSONObject();
+  }
+  
+  public void setObjectId(String value) throws NCMBException {
+    try {
+      fields.put("objectId", value);
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
+  }
+  
+  public Boolean fetch() throws NCMBException {
+    try {
+      JSONObject response = NCMBRequest.get(path(), ncmb.applicationKey(), ncmb.clientKey(), new JSONObject());
+      Iterator<String> keys = response.keys();
+
+      while(keys.hasNext()) {
+        String key = keys.next();
+        fields.put(key, response.get(key));
+      }
+      return true;
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
   }
   
   // 文字列
@@ -106,7 +129,15 @@ class NCMBObject {
     }
   }
   
-  public String path() {
-    return "/" + ncmb.version() + "/classes/" + className;
+  public String path() throws NCMBException {
+    try {
+      String basePath = "/" + ncmb.version() + "/classes/" + className;
+      if (fields.has("objectId")) {
+        basePath = basePath + "/" + fields.getString("objectId");
+      }
+      return basePath;
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です");
+    }
   }
 }

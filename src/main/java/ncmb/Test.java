@@ -9,6 +9,19 @@ public class Test {
      String clientKey = "4895215f6469f325e6278afdb8d0178ddb88659964fd2b0e73ed4db4417bd462";
      NCMB ncmb = new NCMB(applicationKey, clientKey);
      try {
+       NCMBObject Hello = ncmb.NCMBObject("Hello");
+       Hello.setObjectId("hZq3u8EeqULE4CBN");
+       if (Hello.fetch()) {
+         System.err.println(Hello.getString("message"));
+       }
+       return;
+     } catch (NCMBException e) {
+       System.err.println(e.getMessage());
+     }
+   }
+   
+   public static void save(NCMB ncmb) {
+     try {
        NCMBObject hello = ncmb.NCMBObject("Hello");
        hello.put("message", "Hello World");
        JSONArray array = new JSONArray();
@@ -18,7 +31,7 @@ public class Test {
        hello.put("array", array);
        hello.put("boolean", false);
        hello.put("int", 1000);
-       hello.put("long", 1234567890123456789L);
+       hello.put("long", 9223372036854775807L);
        JSONObject json = new JSONObject();
        json.put("obj", "Hello");
        json.put("name", "json");

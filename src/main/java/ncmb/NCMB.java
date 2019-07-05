@@ -14,6 +14,10 @@ class NCMB {
     return new NCMBObject(this, name);
   }
   
+  public NCMBQuery NCMBQuery(String name) {
+    return new NCMBQuery(this, name);
+  }
+  
   public String version() {
     return VERSION;
   }

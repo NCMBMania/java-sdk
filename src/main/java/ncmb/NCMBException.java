@@ -16,3 +16,21 @@ class NCMBException extends Exception {
         super(msg, cause);
     }
 }
+
+class NCMBAuthException extends Exception {
+    public NCMBAuthException() {
+        
+    }
+    
+    public NCMBAuthException(String msg) {
+        super(msg);
+    }
+    
+    public NCMBAuthException(Throwable cause) {
+        super(cause);
+    }
+    
+    public NCMBAuthException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+}

@@ -56,6 +56,25 @@ try {
 }
 ```
 
+## 会員管理
+
+### 会員登録
+
+```java
+try {
+  NCMBUser user = ncmb.NCMBUser();
+  user.put("userName", "test_user");
+  user.put("password", "password");
+  if (user.signUp()) {
+    System.out.println(user.getString("objectId"));
+  } else {
+    System.err.println("Login failed.");
+  }
+} catch (NCMBException e) {
+  System.err.println(e.getMessage());
+}
+```
+
 ## LICENSE
 
 MIT.

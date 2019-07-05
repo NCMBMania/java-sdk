@@ -10,9 +10,10 @@ import java.net.Proxy;
 import java.net.URL;
 import java.sql.Timestamp;
 import org.json.JSONObject;
+import java.io.IOException;
 
 public class HttpRequest {
-  public static String exec(HttpURLConnection con, String applicationKey, Timestamp time, String signature, JSONObject data, int statusCode) {
+  public static String exec(HttpURLConnection con, String applicationKey, Timestamp time, String signature, JSONObject data, int statusCode) throws NCMBException {
     StringBuffer result = new StringBuffer();
     try {
       con.setRequestProperty(Signature.NCMB_APPLICATION_KEY_NAME, applicationKey);
@@ -44,10 +45,10 @@ public class HttpRequest {
         inReader.close();
         in.close();
       }else{
-        result.append("Error :" + String.valueOf(status));
+        throw new NCMBException("Auth error");
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new NCMBException("API Error");
     } finally {
       if (con != null) {
         con.disconnect();
@@ -70,7 +71,7 @@ public class HttpRequest {
     return result;
   }
   
-  public static String post(String urlString, String applicationKey, Timestamp time, String signature, JSONObject data) {
+  public static String post(String urlString, String applicationKey, Timestamp time, String signature, JSONObject data) throws IOException, NCMBException {
     String result = null;
     try {
       HttpURLConnection con = null;
@@ -79,8 +80,10 @@ public class HttpRequest {
       con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod(method);
       result = exec(con, applicationKey, time, signature, data, HttpURLConnection.HTTP_CREATED);
+    } catch (IOException e) {
+      throw e;
     } catch (Exception e) {
-      e.printStackTrace();
+      throw e;
     }
     return result;
   }

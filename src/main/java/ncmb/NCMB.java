@@ -18,6 +18,10 @@ class NCMB {
     return new NCMBQuery(this, name);
   }
   
+  public NCMBUser NCMBUser() {
+    return new NCMBUser(this);
+  }
+  
   public String version() {
     return VERSION;
   }

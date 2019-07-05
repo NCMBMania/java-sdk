@@ -34,6 +34,7 @@ public class NCMBRequest {
     try {
       HttpRequest r = new HttpRequest();
       String result = r.post(urlString, applicationKey, time, signature, data);
+      System.out.println(result);
       return new JSONObject(result);
     } catch (Exception e) {
       throw new NCMBException("POST エラー");

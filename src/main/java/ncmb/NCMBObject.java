@@ -11,9 +11,9 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 class NCMBObject {
-  private String className;
-  private JSONObject fields;
-  private NCMB ncmb;
+  public String className;
+  public JSONObject fields;
+  public NCMB ncmb;
   
   public NCMBObject(NCMB ncmb_obj, String name) {
     className = name;

@@ -41,6 +41,21 @@ try {
 }
 ```
 
+### データストアの検索と抽出件数の設定
+
+```java
+try {
+  NCMBQuery Query = ncmb.NCMBQuery("Hello");
+  Query.whereEqualTo("int", 1000);
+  Query.limit(5);
+  ArrayList<NCMBObject> ary = Query.find();
+  assertEquals(ary.get(0).getInt("int"), 1000);
+  assertEquals(ary.size(), 5);
+} catch (NCMBException e) {
+  System.err.println(e.getMessage());
+}
+```
+
 ## LICENSE
 
 MIT.

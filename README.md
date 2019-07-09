@@ -56,6 +56,26 @@ try {
 }
 ```
 
+複数の検索条件設定
+
+```java
+try {
+  NCMBQuery Hello = ncmb.NCMBQuery("Hello");
+  Hello.whereGreaterThanOrEqualTo("int", 400);
+  Hello.whereLessThan("int", 800);
+  ArrayList<NCMBObject> ary = Hello.find();
+  ary.forEach((o) -> {
+    try {
+      System.out.println(o.getInt("int"));
+    } catch (NCMBException e) {
+      System.out.println(e);
+    }
+  });
+} catch (NCMBException e) {
+  System.err.println(e.getMessage());
+}
+```
+
 ## 会員管理
 
 ### 会員登録

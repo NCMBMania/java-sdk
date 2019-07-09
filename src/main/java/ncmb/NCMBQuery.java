@@ -26,9 +26,130 @@ class NCMBQuery {
   
   public void whereEqualTo(String name, Object value) throws NCMBException {
     try {
-      where.put (name, value);
+      where.put(name, value);
     } catch (JSONException e) {
       throw new NCMBException("JSONが不正です");
+    }
+  }
+  
+  public void whereContainedIn(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$in", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereContainedIn");
+    }
+  }
+  public void whereContainedInArray(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$inArray", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereContainedInArray");
+    }
+  }
+  public void whereContainsAll(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$all", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereContainsAll");
+    }
+  }
+  public void whereDoesNotExists(String name) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$exists", false);
+      where.put(name, false);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereDoesNotExists");
+    }
+  }
+  public void whereExists(String name) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$exists", true);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereExists");
+    }
+  }
+  public void whereGreaterThan(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$gt", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereGreaterThan");
+    }
+  }
+  public void whereGreaterThanOrEqualTo(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$gte", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereGreaterThanOrEqualTo");
+    }
+  }
+  public void whereLessThan(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$lt", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereLessThan");
+    }
+  }
+  public void whereLessThanOrEqualTo(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$lte", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereLessThanOrEqualTo");
+    }
+  }
+  public void whereNotContainedIn(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$nin", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereNotContainedIn");
+    }
+  }
+  public void whereNotContainedInArray(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$ninArray", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereNotContainedInArray");
+    }
+  }
+  public void whereNotEqualTo(String name, Object value) throws NCMBException {
+    try {
+      JSONObject condition = where.has(name) ? where.getJSONObject(name) : new JSONObject();
+      condition.put("$ne", value);
+      where.put(name, condition);
+    } catch (JSONException e) {
+      System.out.println(e);
+      throw new NCMBException("JSONが不正です : whereNotEqualTo");
     }
   }
   
@@ -52,7 +173,7 @@ class NCMBQuery {
       };
       return results;
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です : find");
     }
   }
   

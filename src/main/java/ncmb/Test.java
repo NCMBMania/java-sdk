@@ -2,6 +2,7 @@ package ncmb;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
+import java.util.ArrayList;
 
 public class Test {
    public static void main(String[] args){
@@ -9,14 +10,17 @@ public class Test {
      String clientKey = "4895215f6469f325e6278afdb8d0178ddb88659964fd2b0e73ed4db4417bd462";
      NCMB ncmb = new NCMB(applicationKey, clientKey);
      try {
-       NCMBUser user = ncmb.NCMBUser();
-       user.put("userName", "test_user");
-       user.put("password", "password");
-       if (user.signUp()) {
-         System.out.println(user.getString("objectId"));
-       } else {
-         System.err.println("Login failed.");
-       }
+       NCMBQuery Hello = ncmb.NCMBQuery("Hello");
+       Hello.whereGreaterThanOrEqualTo("int", 400);
+       Hello.whereLessThan("int", 800);
+       ArrayList<NCMBObject> ary = Hello.find();
+       ary.forEach((o) -> {
+         try {
+           System.out.println(o.getInt("int"));
+         } catch (NCMBException e) {
+           System.out.println(e);
+         }
+       });
      } catch (NCMBException e) {
        System.err.println(e.getMessage());
      }

@@ -25,10 +25,12 @@ public class UserTest {
   public void testRegister() {
     try {
       NCMBUser user = ncmb.NCMBUser();
-      user.put("username", "test_user");
+      user.put("userName", "test_user");
       user.put("password", "password");
       if (user.signUp()) {
-        assertNotNull(user.getString("objectId"));
+        System.out.println(user.getString("objectId"));
+      } else {
+        System.err.println("Login failed.");
       }
     } catch (NCMBException e) {
       System.err.println(e.getMessage());

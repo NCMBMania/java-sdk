@@ -3,6 +3,10 @@ package ncmb;
 import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.net.URLEncoder;
+import java.util.TreeMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ArrayList;
 
 public class NCMBRequest {
   public static JSONObject get(String path, String applicationKey, String clientKey, JSONObject queries) throws NCMBException{
@@ -12,14 +16,28 @@ public class NCMBRequest {
     String signature = s.sign(method, path, applicationKey, time, queries, clientKey);
     try {
       String urlString = "https://" + Signature.FQDN + path;
-      if (!queries.isNull("where")) {
-        JSONObject where = queries.getJSONObject("where");
-        urlString = urlString + "?where=" + URLEncoder.encode(where.toString(), "UTF-8");
+      
+      Iterator<String> iterator = queries.keys();
+      Map<String,String> params = new TreeMap<>();
+      while (iterator.hasNext()) {
+        String key = iterator.next();
+        Object obj = queries.get(key);
+        if (obj instanceof Integer) {
+          params.put(key, URLEncoder.encode(obj.toString(), "UTF-8"));
+        } else {
+          params.put(key, URLEncoder.encode(queries.getJSONObject(key).toString(), "UTF-8"));
+        }
       }
+      ArrayList<String> aryParams = new ArrayList<>();
+      for (Map.Entry<String, String> entry : params.entrySet()) {
+        aryParams.add(entry.getKey() + "=" + entry.getValue());
+      }
+      urlString = urlString + "?" + String.join("&", aryParams);
       HttpRequest r = new HttpRequest();
       String result = r.get(urlString, applicationKey, time, signature);
       return new JSONObject(result);
     } catch (Exception e) {
+      System.out.println(e);
       throw new NCMBException("GET エラー");
     }
   }

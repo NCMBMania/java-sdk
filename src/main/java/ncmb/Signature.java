@@ -38,7 +38,6 @@ public class Signature {
       ary[1] = FQDN;
       ary[2] = path;
       ary[3] = queryString(applicationKey, time, queries);
-      
       SecretKeySpec signingKey = new SecretKeySpec(clientKey.getBytes(StandardCharsets.UTF_8), SIGNATURE_METHOD_VALUE);
       Mac mac = Mac.getInstance(SIGNATURE_METHOD_VALUE);
       mac.init(signingKey);
@@ -61,17 +60,28 @@ public class Signature {
       map.put(NCMB_APPLICATION_KEY_NAME, applicationKey);
       map.put(NCMB_APPLICATION_TIMESTAMP_NAME, iso8601(time));
       Iterator<String> iterator = queries.keys();
+      Map<String,String> params = new TreeMap<>();
       while (iterator.hasNext()) {
         String key = iterator.next();
-        map.put(key, URLEncoder.encode(queries.getJSONObject(key).toString(), "UTF-8"));
+        Object obj = queries.get(key);
+        if (obj instanceof Integer) {
+          params.put(key, URLEncoder.encode(obj.toString(), "UTF-8"));
+        } else {
+          params.put(key, URLEncoder.encode(queries.getJSONObject(key).toString(), "UTF-8"));
+        }
+      }
+      ArrayList<String> aryParams = new ArrayList<>();
+      for (Map.Entry<String, String> entry : params.entrySet()) {
+        aryParams.add(entry.getKey() + "=" + entry.getValue());
       }
       ArrayList<String> ary = new ArrayList<>();
       for (Map.Entry<String, String> entry : map.entrySet()) {
         ary.add(entry.getKey() + "=" + entry.getValue());
       }
+      ary.add(String.join("&", aryParams));
       result = String.join("&", ary);
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です : queryString");
     } catch (UnsupportedEncodingException e) {
       throw new NCMBException("サポートされていないエンコードです");
     }

@@ -32,12 +32,13 @@ public class NCMBRequest {
       for (Map.Entry<String, String> entry : params.entrySet()) {
         aryParams.add(entry.getKey() + "=" + entry.getValue());
       }
-      urlString = urlString + "?" + String.join("&", aryParams);
+      if (aryParams.size() > 0) {
+        urlString = urlString + "?" + String.join("&", aryParams);
+      }
       HttpRequest r = new HttpRequest();
       String result = r.get(urlString, applicationKey, time, signature);
       return new JSONObject(result);
     } catch (Exception e) {
-      System.out.println(e);
       throw new NCMBException("GET エラー");
     }
   }

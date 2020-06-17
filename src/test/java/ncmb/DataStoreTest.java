@@ -14,8 +14,8 @@ public class DataStoreTest {
   
   @BeforeAll
   public static void setup() {
-    String applicationKey = "b347bafb25296ae896e06684068574f4332e2526626f78b475e799ca5882901e";
-    String clientKey = "4895215f6469f325e6278afdb8d0178ddb88659964fd2b0e73ed4db4417bd462";
+    String applicationKey = "70dfced7542e494861ec39ba7442115dfa9806312a444831ed9a7faac5087934";
+    String clientKey = "4d0dea61349c1ae47106a06c80f11dfffe705e606709fa9563ac5cf80cf2edff";
     ncmb = new NCMB(applicationKey, clientKey);
   }
   
@@ -33,20 +33,7 @@ public class DataStoreTest {
       assertEquals(ary.size(), 6);
       return;
     } catch (NCMBException e) {
-      System.err.println(e.getMessage());
-    }
-  }
-  
-  @Test
-  public void testFetch() {
-    try {
-      NCMBObject Hello = ncmb.NCMBObject("Hello");
-      Hello.setObjectId("hZq3u8EeqULE4CBN");
-      if (Hello.fetch()) {
-        System.err.println(Hello.getString("message"));
-      }
-      return;
-    } catch (NCMBException e) {
+      System.err.println("testFind failed.");
       System.err.println(e.getMessage());
     }
   }
@@ -69,11 +56,28 @@ public class DataStoreTest {
       json.put("name", "json");
       hello.put("json", json);
       hello.save();
+      assertEquals(hello.getInt("int"), 1000);
       System.out.println(hello.getString("objectId"));
     } catch (JSONException e) {
       System.err.println(e.getMessage());
     } catch (NCMBException e) {
+      System.err.println("Save failed.");
       System.err.println(e.getMessage());
     }
   }
+
+  @Test
+  public void testFetch() {
+    try {
+      NCMBObject Hello = ncmb.NCMBObject("Hello");
+      Hello.setObjectId("UwsyeQ568rYgMAwR");
+      if (Hello.fetch()) {
+        System.out.println(Hello.getString("message"));
+      }
+      return;
+    } catch (NCMBException e) {
+      System.err.println(e.getMessage());
+    }
+  }
+  
 }

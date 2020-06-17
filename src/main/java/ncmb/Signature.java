@@ -78,7 +78,9 @@ public class Signature {
       for (Map.Entry<String, String> entry : map.entrySet()) {
         ary.add(entry.getKey() + "=" + entry.getValue());
       }
-      ary.add(String.join("&", aryParams));
+      if (aryParams.size() > 0) {
+        ary.add(String.join("&", aryParams));
+      }
       result = String.join("&", ary);
     } catch (JSONException e) {
       throw new NCMBException("JSONが不正です : queryString");

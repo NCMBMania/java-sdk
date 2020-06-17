@@ -28,7 +28,7 @@ class NCMBQuery {
     try {
       where.put(name, value);
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です whereEqualTo");
     }
   }
   

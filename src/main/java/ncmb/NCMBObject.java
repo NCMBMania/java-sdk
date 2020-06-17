@@ -25,7 +25,7 @@ class NCMBObject {
     try {
       fields.put("objectId", value);
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です setObjectId");
     }
   }
   
@@ -40,7 +40,7 @@ class NCMBObject {
       }
       return true;
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です fetch");
     }
   }
     
@@ -61,7 +61,7 @@ class NCMBObject {
         fields.put(key, data.get(key));
       }
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です set");
     }
   }
   
@@ -69,7 +69,7 @@ class NCMBObject {
     try {
       return fields.getString(field);
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です getString");
     }
   }
   
@@ -77,7 +77,7 @@ class NCMBObject {
     try {
       return fields.getInt(field);
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です getInt");
     }
   }
   
@@ -89,7 +89,7 @@ class NCMBObject {
       df.setTimeZone(new SimpleTimeZone(0, "GMT"));
       put("createDate", df.parse(response.getString("createDate")));
     } catch (JSONException e) {
-      throw new NCMBException("JSONが不正です");
+      throw new NCMBException("JSONが不正です save");
     } catch (ParseException e) {
       throw new NCMBException("日付がパースできません");
     }

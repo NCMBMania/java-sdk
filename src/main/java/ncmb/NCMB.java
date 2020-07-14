@@ -21,6 +21,14 @@ class NCMB {
   public NCMBUser NCMBUser() {
     return new NCMBUser(this);
   }
+
+  public NCMBPush NCMBPush() {
+    return new NCMBPush(this);
+  }
+
+  public NCMBInstallation NCMBInstallation() {
+    return new NCMBInstallation(this);
+  }
   
   public String version() {
     return VERSION;

@@ -44,7 +44,7 @@ public class DataStoreTest {
       NCMBObject hello = ncmb.NCMBObject("Hello");
       hello.put("message", "Hello World");
       JSONArray array = new JSONArray();
-      array.put("apple");
+      array.put("日本語");
       array.put("orange");
       array.put("banana");
       hello.put("array", array);
@@ -70,7 +70,7 @@ public class DataStoreTest {
   public void testFetch() {
     try {
       NCMBObject Hello = ncmb.NCMBObject("Hello");
-      Hello.setObjectId("UwsyeQ568rYgMAwR");
+      Hello.setObjectId("RCdYT8svkoUea3pA");
       if (Hello.fetch()) {
         System.out.println(Hello.getString("message"));
       }
@@ -79,5 +79,21 @@ public class DataStoreTest {
       System.err.println(e.getMessage());
     }
   }
-  
+
+  @Test
+  public void testDelete() {
+    try {
+      NCMBObject hello = ncmb.NCMBObject("Hello");
+      hello.put("message", "Hello World");
+      hello.put("int", 1000);
+      hello.save();
+      assertEquals(hello.getInt("int"), 1000);
+      System.out.println(hello.getString("objectId"));
+      assertEquals(hello.destroy(), true);
+    } catch (NCMBException e) {
+      System.err.println("Delete failed.");
+      System.err.println(e.getMessage());
+    }
+  }
+
 }

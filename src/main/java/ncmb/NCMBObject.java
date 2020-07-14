@@ -33,7 +33,6 @@ class NCMBObject {
     try {
       JSONObject response = NCMBRequest.get(path(), ncmb.applicationKey(), ncmb.clientKey(), new JSONObject());
       Iterator<String> keys = response.keys();
-
       while(keys.hasNext()) {
         String key = keys.next();
         fields.put(key, response.get(key));
@@ -92,6 +91,14 @@ class NCMBObject {
       throw new NCMBException("JSONが不正です save");
     } catch (ParseException e) {
       throw new NCMBException("日付がパースできません");
+    }
+  }
+
+  public Boolean destroy() throws NCMBException{
+    try {
+      return NCMBRequest.delete(path(), ncmb.applicationKey(), ncmb.clientKey(), fields.getString("objectId"));
+    } catch (JSONException e) {
+      throw new NCMBException("JSONが不正です delete");
     }
   }
   

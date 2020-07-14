@@ -27,6 +27,12 @@ try {
 }
 ```
 
+### 削除
+
+```java
+hello.destroy();
+```
+
 ### 1件取得
 
 ```java
@@ -93,6 +99,41 @@ try {
 } catch (NCMBException e) {
   System.err.println(e.getMessage());
 }
+```
+
+## デバイストークン
+
+### 登録
+
+```java
+NCMBInstallation installation = ncmb.NCMBInstallation();
+installation.put("sdkVersion", "1.0.0");
+installation.put("deviceToken", "aaaaaaaaaaaaaaaaaaaa");
+installation.put("deviceType", "ios");
+installation.put("appVersion", "1.0.0");
+installation.put("timeZone", "Asia/Tokyo");
+installation.put("applicationName", "Java SDK");
+installation.save();
+
+// 削除
+installation.destroy();
+```
+
+## プッシュ通知
+
+### 登録
+
+```java
+NCMBPush push = ncmb.NCMBPush();
+push.put("immediateDeliveryFlag", true);
+push.put("message", "Hello, World!");
+JSONArray target = new JSONArray();
+target.put("ios");
+target.put("android");
+push.put("target", target);
+push.save();
+// 削除
+push.destroy();
 ```
 
 ## LICENSE

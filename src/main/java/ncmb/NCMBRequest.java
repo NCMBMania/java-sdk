@@ -59,4 +59,19 @@ public class NCMBRequest {
       throw new NCMBException("POST エラー");
     }
   }
+
+  public static Boolean delete(String path, String applicationKey, String clientKey, String objectId) throws NCMBException{
+    String method = "DELETE";
+    Timestamp time = new Timestamp(System.currentTimeMillis());
+    Signature s = new Signature();
+    String signature = s.sign(method, path, applicationKey, time, new JSONObject(), clientKey);
+    String urlString = "https://" + Signature.FQDN + path;
+    try {
+      HttpRequest r = new HttpRequest();
+      String result = r.delete(urlString, applicationKey, time, signature);
+      return result.equals("");
+    } catch (Exception e) {
+      throw new NCMBException(e.getMessage());
+    }
+  }
 }

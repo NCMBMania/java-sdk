@@ -59,6 +59,21 @@ public class NCMBRequest {
       throw new NCMBException("POST エラー");
     }
   }
+  
+  public static JSONObject post(String path, String applicationKey, String clientKey, String fileName, byte[] data) throws NCMBException{
+    String method = "POST";
+    Timestamp time = new Timestamp(System.currentTimeMillis());
+    Signature s = new Signature();
+    String signature = s.sign(method, path, applicationKey, time, new JSONObject(), clientKey);
+    String urlString = "https://" + Signature.FQDN + path;
+    try {
+      HttpRequest r = new HttpRequest();
+      String result = r.post(urlString, applicationKey, time, signature, fileName, data);
+      return new JSONObject(result);
+    } catch (Exception e) {
+      throw new NCMBException(e.getMessage());
+    }
+  }
 
   public static Boolean delete(String path, String applicationKey, String clientKey, String objectId) throws NCMBException{
     String method = "DELETE";

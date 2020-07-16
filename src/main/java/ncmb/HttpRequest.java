@@ -1,71 +1,35 @@
 package ncmb;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
+import java.io.IOException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.ContentType;
+import org.apache.http.HttpEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import java.sql.Timestamp;
 import org.json.JSONObject;
-import java.io.IOException;
 
 public class HttpRequest {
-  public static String exec(HttpURLConnection con, String applicationKey, Timestamp time, String signature, JSONObject data, int statusCode) throws NCMBException {
-    StringBuffer result = new StringBuffer();
-    try {
-      con.setRequestProperty(Signature.NCMB_APPLICATION_KEY_NAME, applicationKey);
-      con.setRequestProperty(Signature.NCMB_APPLICATION_TIMESTAMP_NAME, Signature.iso8601(time));
-      con.setRequestProperty("X-NCMB-Signature", signature);
-      con.setRequestProperty("Content-Type", "application/json");
-      if (data != null) {
-        con.setDoOutput(true);
-        OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
-        out.write(data.toString());
-        out.close();
-      }
-      con.connect();
-      final int status = con.getResponseCode();
-      if (status == statusCode) {
-        final InputStream in = con.getInputStream();
-        String encoding = con.getContentEncoding();
-        if(null == encoding){
-          encoding = "UTF-8";
-        }
-        final InputStreamReader inReader = new InputStreamReader(in, encoding);
-        final BufferedReader bufReader = new BufferedReader(inReader);
-        String line = null;
-        // 1行ずつテキストを読み込む
-        while((line = bufReader.readLine()) != null) {
-          result.append(line);
-        }
-        bufReader.close();
-        inReader.close();
-        in.close();
-      }else{
-        throw new NCMBException("Auth error. HTTP Status code is " + String.valueOf(status));
-      }
-    } catch (Exception e) {
-      throw new NCMBException(e.getMessage());
-    } finally {
-      if (con != null) {
-        con.disconnect();
-      }
-    }
-    return result.toString();
-  }
-
   public static String get(String urlString, String applicationKey, Timestamp time, String signature) {
     String result = null;
     try {
-      URL url = new URL(urlString);
-      String method = "GET";
-      HttpURLConnection con = null;
-      con = (HttpURLConnection) url.openConnection();
-      con.setRequestMethod(method);
-      result = exec(con, applicationKey, time, signature, null, HttpURLConnection.HTTP_OK);
+      CloseableHttpClient client = HttpClients.createDefault();
+      HttpGet httpGet = new HttpGet(urlString);
+      httpGet.setHeader("Content-type", "application/json; charset=UTF-8");
+      httpGet.setHeader(Signature.NCMB_APPLICATION_KEY_NAME, applicationKey);
+      httpGet.setHeader(Signature.NCMB_APPLICATION_TIMESTAMP_NAME, Signature.iso8601(time));
+      httpGet.setHeader("X-NCMB-Signature", signature);
+      CloseableHttpResponse response = client.execute(httpGet);
+      client.close();
+      result = EntityUtils.toString(response.getEntity());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -75,12 +39,41 @@ public class HttpRequest {
   public static String post(String urlString, String applicationKey, Timestamp time, String signature, JSONObject data) throws IOException, NCMBException {
     String result = null;
     try {
-      HttpURLConnection con = null;
-      String method = "POST";
-      URL url = new URL(urlString);
-      con = (HttpURLConnection) url.openConnection();
-      con.setRequestMethod(method);
-      result = exec(con, applicationKey, time, signature, data, HttpURLConnection.HTTP_CREATED);
+      CloseableHttpClient client = HttpClients.createDefault();
+      HttpPost httpPost = new HttpPost(urlString);
+      httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
+      httpPost.setHeader(Signature.NCMB_APPLICATION_KEY_NAME, applicationKey);
+      httpPost.setHeader(Signature.NCMB_APPLICATION_TIMESTAMP_NAME, Signature.iso8601(time));
+      httpPost.setHeader("X-NCMB-Signature", signature);
+      StringEntity entity = new StringEntity(data.toString(), "UTF-8");
+      httpPost.setEntity(entity);
+      CloseableHttpResponse response = client.execute(httpPost);
+      client.close();
+      result = EntityUtils.toString(response.getEntity());
+    } catch (IOException e) {
+      throw e;
+    } catch (Exception e) {
+      throw e;
+    }
+    return result;
+  }
+
+  public static String post(String urlString, String applicationKey, Timestamp time, String signature, String fileName, byte[] data) throws IOException, NCMBException {
+    String result = null;
+    try {
+      CloseableHttpClient client = HttpClients.createDefault();
+      HttpPost httpPost = new HttpPost(urlString);
+      httpPost.setHeader(Signature.NCMB_APPLICATION_KEY_NAME, applicationKey);
+      httpPost.setHeader(Signature.NCMB_APPLICATION_TIMESTAMP_NAME, Signature.iso8601(time));
+      httpPost.setHeader("X-NCMB-Signature", signature);
+      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+      builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+      builder.addBinaryBody("file", data, ContentType.DEFAULT_BINARY, fileName);
+      HttpEntity entity = builder.build();
+      httpPost.setEntity(entity);
+      CloseableHttpResponse response = client.execute(httpPost);
+      result = EntityUtils.toString(response.getEntity());
+      client.close();
     } catch (IOException e) {
       throw e;
     } catch (Exception e) {
@@ -92,12 +85,15 @@ public class HttpRequest {
   public static String delete(String urlString, String applicationKey, Timestamp time, String signature) throws IOException, NCMBException {
     String result = null;
     try {
-      HttpURLConnection con = null;
-      String method = "DELETE";
-      URL url = new URL(urlString);
-      con = (HttpURLConnection) url.openConnection();
-      con.setRequestMethod(method);
-      result = exec(con, applicationKey, time, signature, new JSONObject(), HttpURLConnection.HTTP_OK);
+      CloseableHttpClient client = HttpClients.createDefault();
+      HttpDelete httpDelete = new HttpDelete(urlString);
+      httpDelete.setHeader("Content-type", "application/json; charset=UTF-8");
+      httpDelete.setHeader(Signature.NCMB_APPLICATION_KEY_NAME, applicationKey);
+      httpDelete.setHeader(Signature.NCMB_APPLICATION_TIMESTAMP_NAME, Signature.iso8601(time));
+      httpDelete.setHeader("X-NCMB-Signature", signature);
+      CloseableHttpResponse response = client.execute(httpDelete);
+      client.close();
+      result = EntityUtils.toString(response.getEntity());
     } catch (IOException e) {
       throw e;
     } catch (Exception e) {

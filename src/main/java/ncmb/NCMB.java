@@ -29,6 +29,10 @@ class NCMB {
   public NCMBInstallation NCMBInstallation() {
     return new NCMBInstallation(this);
   }
+
+  public NCMBFile NCMBFile(String name, byte[] data) {
+    return new NCMBFile(this, name, data);
+  }
   
   public String version() {
     return VERSION;
